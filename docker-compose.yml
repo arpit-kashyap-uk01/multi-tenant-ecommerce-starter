@@ -1,0 +1,43 @@
+version: "3.9"
+services:
+  gateway-service:
+    build: ./gateway-service
+    ports:
+      - "8080:8080"
+    depends_on:
+      - auth-service
+      - product-service
+      - payments-service
+      - file-service
+      - frontend
+
+  auth-service:
+    build: ./auth-service
+    expose:
+      - "8081"
+    environment:
+      - JWT_SECRET=${JWT_SECRET}
+
+  product-service:
+    build: ./product-service
+    expose:
+      - "8082"
+
+  payments-service:
+    build: ./payments-service
+    expose:
+      - "8083"
+    environment:
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+      - STRIPE_PUBLIC_KEY=${STRIPE_PUBLIC_KEY}
+      - JWT_SECRET=${JWT_SECRET}
+
+  file-service:
+    build: ./file-service
+    expose:
+      - "8084"
+
+  frontend:
+    build: ./frontend
+    expose:
+      - "3000"
